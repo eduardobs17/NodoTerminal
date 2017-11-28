@@ -11,8 +11,8 @@
  */
 Client::Client() {
     d = new Dispatcher();
-    portCarritos = const_cast<char *>("20000");
-    portLegos = const_cast<char *>("20001");
+    portCarritos = const_cast<char *>("20001");
+    portLegos = const_cast<char *>("20002");
     ipCarritos = const_cast<char *>("localhost");
     ipLegos = const_cast<char *>("localhost");
 }
