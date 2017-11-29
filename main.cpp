@@ -6,13 +6,13 @@
 using namespace std;
 
 //Puertos
-//RouterCarritos recibe de Terminal en 20000
-//RouterLegos recibe de Terminal en 2001
-//Terminal recibe de RouterCarritos en 20002
+//RouterCarritos recibe de Terminal en 20001
+//RouterLegos recibe de Terminal en 20002
+//Terminal recibe de RouterCarritos en 20000
 //Terminal recibe de RouterLegos en 20003
 
 void interfazLC() {
-    auto * sL = new Server(20002);
+    auto * sL = new Server(20000);
     sL->socketS(1);
 }
 

@@ -1,5 +1,6 @@
 #include "Mensaje.h"
 #include <sstream>
+#include <utility>
 
 using namespace std;
 
@@ -47,25 +48,20 @@ void Mensaje::setMensaje(string msg) {
 /**
  * Establece el paquete del mensaje.
  * @param p El paquete
- * @param tipo El tipo de paquete recibido. 1 => luces. 2 => carritos
  */
-void Mensaje::setPaquete(string p, int tipo) {
-    if (tipo == 1) {
-        paq = p;
-    } else {
-        paq = p + "\n";
-    }
+void Mensaje::setPaquete(string p) {
+    paq = std::move(p);
 }
 
 /** Divide la información del paquete. */
 vector<string> Mensaje::obtenerInfo() {
     vector<string> info;
     int counter = 0;
-    string aux = "";
+    string aux;
 
-    for (int x = 0; x < paq.size(); x++) {
-        if (paq[x] != '\n' && paq[x] != '\000') {
-            aux += paq[x];
+    for (char x : paq) {
+        if (x != '\n' && x != '\000') {
+            aux += x;
         } else {
             info.push_back(aux);
             aux = "";

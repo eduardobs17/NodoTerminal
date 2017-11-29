@@ -14,7 +14,7 @@ public:
     void setAccion(string);
     void setIdAccion(int);
     void setMensaje(string);
-    void setPaquete(string, int);
+    void setPaquete(string);
 
     string getPaquete();
     vector<string> obtenerInfo();

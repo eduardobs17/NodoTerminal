@@ -82,34 +82,19 @@ void Server::analizarPaquete (int sock, int tipoMensaje) {
     if (n < 0) error("ERROR reading from socket");
 
     //Se obtiene el paquete y se divide para analizarlo.
-    msj->setPaquete(&buffer[0], tipoMensaje);
+    msj->setPaquete(&buffer[0]);
     vector<string> v = msj->obtenerInfo();
 
     if (v[1] == "25.0.2.5") {
-        cout << "Mensaje recibido desde " << v[0] << ": ";
-        if (tipoMensaje == 1) {
-            cout << v[4] << endl;
-        } else {
-            cout << v[5];
-        }
+        cout << "Mensaje recibido desde " << v[0] << ": " << v[4] << endl;
     } else {
-
         cout << "Paquete recibido desde " << v[0] << ": ";
-        if (tipoMensaje == 1) {
-            cout << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ", " << v[4] << "]" << endl;
-        } else { //Paquete Carritos
-            cout << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ", " << v[4] << ", " << v[5] << "]" << endl;
-        }
+        cout << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ", " << v[4] << "]" << endl;
 
         auto *c = new Client();
         c->prepararMensaje(v[1], msj->getPaquete());
 
         cout << "Paquete enviado a " << v[1] << ": ";
-        if (tipoMensaje == 1) { //Paquete Luces
-            cout << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ", " << v[4] << "]" << endl << endl;
-        } else { //Paquete Carritos
-            cout << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ", " << v[4] << ", " << v[5] << "]"
-                 << endl << endl;
-        }
+        cout << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ", " << v[4] << "]" << endl;
     }
 }
