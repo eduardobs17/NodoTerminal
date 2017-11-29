@@ -11,8 +11,8 @@
  */
 Client::Client() {
     d = new Dispatcher();
-    portCarritos = const_cast<char *>("20001");
-    portLegos = const_cast<char *>("20002");
+    portCarritos = const_cast<char *>("2001");
+    portLegos = const_cast<char *>("2002");
     ipCarritos = const_cast<char *>("localhost");
     ipLegos = const_cast<char *>("localhost");
 }
@@ -45,7 +45,7 @@ int Client::socketC(char* ip, char* port, string msj) {
     }
     buffer[msj.size()] = '\000';
 
-    printf("Enviando mensaje: estableciendo conexión con el servidor...\n");
+    printf("Enviando mensaje: estableciendo conexión con el servidor...\n\n");
     int portno = atoi(port);
 
     //Se crea el socket.
@@ -68,9 +68,10 @@ int Client::socketC(char* ip, char* port, string msj) {
         error("ERROR connecting");
 
     auto n = static_cast<int>(write(sockfd, buffer, strlen(buffer)));
+
     if (n < 0)
         error("ERROR writing to socket");
-
+    printf("Mensaje enviado.\n\n");
     close(sockfd);
     return 0;
 }
@@ -126,65 +127,73 @@ void Client::prepararMensaje(string redDest, string msj) {
     }
 
     if (!terminado) {
-        cout << "Sucedió un error buscando la red." << endl;
+        cout << "Sucedió un error buscando la red." << endl << endl;
         exit(-1);
     }
 
-    //Ahora buscamos en la tabla de enrutamiento la red correspondiente.
-    int x = 0;
-    int i = 0;
-    for (x; x < 6; x++) {
-        string red = d->idRed[x];
+    if (redDestino == "25") {
+        if (destino == "25.0.7.25") {
+            socketC(ipCarritos, portCarritos, msj);
+        } else {
+            socketC(ipLegos, portLegos, msj);
+        }
+    } else {
+        //Ahora buscamos en la tabla de enrutamiento la red correspondiente.
+        int x = 0;
+        int i = 0;
+        for (x; x < 6; x++) {
+            string red = d->idRed[x];
 
-        string aux;
-        counter = 0;
-        counter2 = 0;
-        bytes = 0;
-        bytesMax = 0;
-        terminado = false;
-        while (!terminado && counter < red.size()) {
-            if (red[counter] != '.') {
-                aux += red[counter];
-            } else {
-                if (counter2 == 0) {
-                    int tipoRed = atoi(aux.c_str());
-
-                    if (tipoRed < 128) {
-                        bytesMax = 1;
-                    }
-
-                    if (tipoRed >= 128 && tipoRed < 192) {
-                        bytesMax = 2;
-                    }
-
-                    if (tipoRed >= 192) {
-                        bytesMax = 3;
-                    }
-                    counter2++;
-                }
-
-                bytes++;
-                if (bytes == bytesMax) {
-                    terminado = true;
-                } else {
+            string aux;
+            counter = 0;
+            counter2 = 0;
+            bytes = 0;
+            bytesMax = 0;
+            terminado = false;
+            while (!terminado && counter < red.size()) {
+                if (red[counter] != '.') {
                     aux += red[counter];
+                } else {
+                    if (counter2 == 0) {
+                        int tipoRed = atoi(aux.c_str());
+
+                        if (tipoRed < 128) {
+                            bytesMax = 1;
+                        }
+
+                        if (tipoRed >= 128 && tipoRed < 192) {
+                            bytesMax = 2;
+                        }
+
+                        if (tipoRed >= 192) {
+                            bytesMax = 3;
+                        }
+                        counter2++;
+                    }
+
+                    bytes++;
+                    if (bytes == bytesMax) {
+                        terminado = true;
+                    } else {
+                        aux += red[counter];
+                    }
+                }
+
+                if (!terminado) {
+                    counter++;
                 }
             }
 
-            if (!terminado) {
-                counter++;
+            if (aux == redDestino) {
+                i = x;
+                x = 10;
             }
         }
 
-        if (aux == redDestino) {
-            i = x;
-            x = 10;
+        if (d->idSalida[i] == "25.25.25.25") { // Se envia routerLegos
+            socketC(ipLegos, portLegos, msj);
+        } else { //Se envia a routerCarritos
+            socketC(ipCarritos, portCarritos, msj);
         }
-    }
-
-    if (d->idSalida[i] == "25.25.25.25") { // Se envia routerLegos
-        socketC(ipLegos, portLegos, msj);
-    } else { //Se envia a routerCarritos
-        socketC(ipCarritos, portCarritos, msj);
     }
 }

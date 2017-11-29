@@ -33,7 +33,7 @@ int main() {
     cin >> opcion;
 
     if (opcion == 0) {
-        cout << "No se enviarán mensajes." << endl;
+        cout << "No se enviarán mensajes." << endl << endl;
     } else {
         bool seguir = true;
         while (seguir) {
@@ -46,14 +46,20 @@ int main() {
             cout << endl << "Cual es el mensaje?: ";
             cin >> mensaje;
 
-            c->prepararMensaje(red, mensaje);
+            string paquete = "25.0.2.5\n";
+            paquete += red;
+            paquete += "\nIntercambio de Mensajes\n1\n";
+            paquete += mensaje;
+            paquete += "\n";
+
+            c->prepararMensaje(red, paquete);
 
             cout << "Desea enviar otro mensaje? 1 => Si, 0 => No: ";
             cin >> opcion;
 
             if (opcion == 0) {
                 seguir = false;
-                cout << "No se enviarán mensajes." << endl;
+                cout << "No se enviarán mensajes." << endl << endl;
             }
         }
     }

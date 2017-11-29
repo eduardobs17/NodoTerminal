@@ -75,7 +75,7 @@ void Server::analizarPaquete (int sock, int tipoMensaje) {
 
     //Se limpia el buffer llenandolo con 0's.
     char buffer[256];
-    bzero(buffer,256);
+    bzero(buffer, 256);
 
     //Se lee el mensaje recibido.
     auto n = static_cast<int>(read(sock, buffer, 255));
@@ -86,15 +86,15 @@ void Server::analizarPaquete (int sock, int tipoMensaje) {
     vector<string> v = msj->obtenerInfo();
 
     if (v[1] == "25.0.2.5") {
-        cout << "Mensaje recibido desde " << v[0] << ": " << v[4] << endl;
+        cout << "Mensaje recibido desde " << v[0] << ": " << v[4] << endl << endl;
     } else {
         cout << "Paquete recibido desde " << v[0] << ": ";
-        cout << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ", " << v[4] << "]" << endl;
+        cout << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ", " << v[4] << "]" << endl << endl;
 
         auto *c = new Client();
         c->prepararMensaje(v[1], msj->getPaquete());
 
         cout << "Paquete enviado a " << v[1] << ": ";
-        cout << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ", " << v[4] << "]" << endl;
+        cout << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ", " << v[4] << "]" << endl << endl;
     }
 }

@@ -5,7 +5,7 @@
 
 class Server {
 public:
-    Server(int);
+    explicit Server(int);
     void analizarPaquete(int, int);
     void error(const char*);
     void socketS(int);
