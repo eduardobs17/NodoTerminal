@@ -2,6 +2,7 @@
 #include <thread>
 #include "Server.h"
 #include "Client.h"
+#include <string>
 
 using namespace std;
 
@@ -27,7 +28,7 @@ int main() {
     thread hiloL(interfazLC);
     thread hiloC(interfazLL);
 
-    cout << "Router Luces - Carritos" << endl << endl;
+    cout << "Nodo terminal Luces" << endl << endl;
     cout << "Desea enviar un mensaje? 1 => Si, 0 => No: ";
     int opcion;
     cin >> opcion;
@@ -38,13 +39,14 @@ int main() {
         bool seguir = true;
         while (seguir) {
             string red;
-            string mensaje;
+            char mensaje[256];
             auto *c = new Client();
 
             cout << endl << "A cual red desea enviar un mensaje?: ";
             cin >> red;
+            cin.ignore();
             cout << endl << "Cual es el mensaje?: ";
-            cin >> mensaje;
+            cin.getline(mensaje, 255);
 
             string paquete = "25.0.2.5\n";
             paquete += red;
